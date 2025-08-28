@@ -1,24 +1,34 @@
 import { useState } from "react";
 import axios from "axios";
+import { useDispatch } from "react-redux";
+import { addUser } from "../utils/userSlice";
+import { useNavigate } from "react-router-dom";
+import { BASE_URL } from "../utils/constants";
+
+
 const Login = () => {
 
   const [emailID, setEmailId] = useState("alia@example.com");
   const [password, setPassword] = useState("Alia@1234");
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
 
    const handleLogin = async () =>{
+
       try {
-        const res = await axios.post("http://localhost:3000/login", {
+        const res = await axios.post( BASE_URL + "/login", {
           emailID,
           password,
         },
         { withCredentials: true }
       );
+      dispatch(addUser(res.data));
+      return navigate("/" );
       } catch (error) {
         console.error(error);
       }
-
-   }
+   };
 
 
   return (
@@ -27,7 +37,7 @@ const Login = () => {
         <div className="card-body">
           <h2 className="card-title justify-center">Login</h2>
           <div >
-            <div className="form-control w-full max-w-xs my-2">
+            <div className="form-control w-full max-w-xs my-4">
               <label className="label">
                 <span className="label-text">Email ID</span>
               </label>
@@ -39,7 +49,7 @@ const Login = () => {
                 onChange={(e) => setEmailId(e.target.value)}
               />
             </div>
-            <div className="form-control w-full max-w-xs my-2">
+            <div className="form-control w-full max-w-xs my-8">
               <label className="label">
                 <span className="label-text">Password </span>
               </label>
